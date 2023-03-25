@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 /// <summary>
 /// Used to calculate Mandelbrot set.
 /// </summary>
@@ -9,32 +10,37 @@ public class MandelbrotGenerator
     ///</summary>
     public Texture2D generateImageAt(float x, float y, int width, int height, int zoom)
     {
-        if(res <= 0||res > 1) return null;
+        if(zoom<1) return null;
         Texture2D mandel = new Texture2D(width,height);
         float step = 1/zoom;
         for(int n = 0;n < width;n++)
         {
             for(int m = 0;m < height;m++)
             {
-                x += step;
-                y += step;
-                mandel.SetPixel(n,m,resolveMandel(x,y));
+                mandel.SetPixel(n,m,resolveMandel(n*step,m*step));
+                Debug.Log(n + " " + m);
             }
-        return new Texture2D(res,res);
+        }
+        mandel.Apply();
+        return mandel;
     }
 
     private int maxIter = 200;
-    public Color resolveMandel(float re, float im){
-        float[] num = {re, im};
+    private Color resolveMandel(float re, float im){
+        float[] num = new float[]{re, im};
         int escape = maxIter;
-        for(i = 0;i < maxIter;i++)
+        int i = 0;
+        for(;i < maxIter;i++)
         {
-            num = {num[0]^2-num[1]^2,2*num[0]};
-            if(num[0]^2+num[1]^2>40000)
+            num = new float[]{(float)(Math.Pow(num[0],2)-Math.Pow(num[1],2)),2*num[0]};
+            if(Math.Pow(num[0],2)+Math.Pow(num[1],2)>40000)
             {
                 escape = i;
                 break;
             }
         }
+        Debug.Log(escape);
+        if(escape == maxIter) return Color.black;
+        return Color.white;
     }
 }
