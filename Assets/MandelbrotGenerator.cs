@@ -1,14 +1,15 @@
-using System.Drawing.Bitmap;
+using UnityEngine;
 /// <summary>
 /// Used to calculate Mandelbrot set.
 /// </summary>
 public class MandelbrotGenerator
 {
     ///<summary>
-    /// Return Bitmap of mandelbrot set at (<param>x</param>,<param>y</param>) with given resolution
+    /// Return Texture2D of mandelbrot set at (<param>x</param>,<param>y</param>) with given resolution
     ///</summary>
-    public Bitmap generateImageAt(int x, int y, int res)
+    public Texture2D generateImageAt(int x, int y, int res)
     {
-        return new Bitmap(res,res);
+        if(res <= 0||res > 1) return null;
+        return new Texture2D(res,res);
     }
 }
